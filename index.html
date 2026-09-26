@@ -19,7 +19,7 @@ button,textarea{font:inherit}.screen{min-height:100svh;width:min(760px,100%);mar
 textarea{width:100%;min-height:230px;resize:none;border:0;border-left:1px solid var(--line);outline:0;background:transparent;color:var(--ink);padding:4px 0 4px 18px;font-size:clamp(18px,3vw,24px);line-height:1.55;caret-color:var(--ink)}
 textarea::placeholder{color:#44433f}.meta{display:flex;justify-content:space-between;align-items:center;gap:16px}.count{font-size:11px;color:#55534e;margin-top:36px}.send:disabled{opacity:.3;cursor:default}
 .home{display:none;justify-content:center;align-items:flex-start;padding-top:42vh}.home.open{display:flex}.home h1{font-size:clamp(46px,11vw,90px);letter-spacing:-.06em;margin:0}
-.error{min-height:18px;color:#8f7c74;font-size:12px;margin-top:16px}
+.error{min-height:18px;color:#8f7c74;font-size:12px;margin-top:16px}.ui-link{position:fixed;right:14px;bottom:11px;color:#3f3e3a;text-decoration:none;font-size:9px;letter-spacing:.12em}.ui-link:hover{color:#77756e}
 @media(max-width:520px){.screen{padding:24px 18px}.word{margin-bottom:28px}textarea{min-height:260px}}
 </style>
 </head>
@@ -55,5 +55,5 @@ send.onclick=async()=>{
  }catch(e){error.textContent='Could not send. Try once more.';send.disabled=false}
 };
 </script>
-</body>
+<a class="ui-link" href="https://uselessinstruments.com" aria-label="Useless Instruments">UI</a>\n</body>
 </html>
