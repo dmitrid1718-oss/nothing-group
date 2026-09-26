@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0a">
+<title>NOTHING — private</title>
+<style>
+:root{--bg:#0b0b0a;--ink:#e9e7df;--muted:#77756e;--line:#292824;--red:#b65a4d}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink)}
+body{font-family:"Courier New",Courier,monospace}
+.wrap{width:min(860px,calc(100% - 36px));margin:auto;padding:30px 0 60px}
+header{display:flex;justify-content:space-between;gap:20px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px}
+h1{font-size:24px;margin:0;letter-spacing:-.04em}.tiny{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+button,input{font:inherit}
+.login{max-width:430px;margin:18vh auto 0}.login p{color:#aaa79f;line-height:1.55}
+input{width:100%;background:transparent;color:var(--ink);border:1px solid var(--line);padding:13px 14px;margin:16px 0 10px}
+button{background:transparent;color:var(--ink);border:1px solid var(--line);padding:11px 15px;cursor:pointer}
+button:hover{background:var(--ink);color:var(--bg)}
+#status{font-size:12px;color:#918e86;margin-top:12px;min-height:18px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin:28px 0 18px}
+.list{border-top:1px solid var(--line)}
+.idea{display:grid;grid-template-columns:90px 1fr;gap:18px;border-bottom:1px solid var(--line);padding:22px 0}
+.id{font-size:11px;color:#56544f}.body{white-space:pre-wrap;font-size:16px;line-height:1.55}
+.date{font-size:10px;color:#686660;margin-top:9px}
+.empty{color:#66645e;padding:34px 0}
+.hide{display:none!important}
+a{color:#77756e;text-decoration:none}a:hover{color:var(--ink)}
+@media(max-width:560px){.idea{grid-template-columns:1fr;gap:8px}.id{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1>NOTHING / PRIVATE</h1><a class="tiny" href="/">Back to Nothing</a></header>
+
+<section id="login" class="login">
+  <div class="tiny">Private admin</div>
+  <p>Enter the Useless Instruments email. A one-time sign-in link will be sent to you.</p>
+  <input id="email" type="email" value="dmitri@uselessinstruments.com" autocomplete="email">
+  <button id="send">Send sign-in link</button>
+  <div id="status"></div>
+</section>
+
+<section id="admin" class="hide">
+  <div class="toolbar"><span class="tiny" id="count">0 ideas</span><button id="signout">Sign out</button></div>
+  <div id="list" class="list"></div>
+</section>
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const SUPABASE_URL='https://znzoepudtfpsxoglkyia.supabase.co';
+const SUPABASE_KEY='sb_publishable_XySCbewhCGiQXPGMui5peA_SiZz0VqA';
+const sb=createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const login=document.getElementById('login'), admin=document.getElementById('admin');
+const status=document.getElementById('status'), list=document.getElementById('list'), count=document.getElementById('count');
+
+async function load(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){login.classList.remove('hide');admin.classList.add('hide');return}
+  const email=session.user?.email||'';
+  if(email!=='dmitri@uselessinstruments.com'){
+    await sb.auth.signOut();
+    status.textContent='This account is not authorized.';
+    return;
+  }
+  login.classList.add('hide');admin.classList.remove('hide');
+  const {data,error}=await sb.from('nothing_ideas').select('id,idea,created_at').order('created_at',{ascending:false});
+  if(error){list.innerHTML='<div class="empty">Could not load ideas.</div>';return}
+  count.textContent=data.length+' idea'+(data.length===1?'':'s');
+  list.innerHTML=data.length?data.map(r=>{
+    const d=new Date(r.created_at);
+    const safe=(r.idea||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    return '<article class="idea"><div class="id">#'+r.id+'</div><div><div class="body">'+safe+'</div><div class="date">'+d.toLocaleString()+'</div></div></article>';
+  }).join(''):'<div class="empty">Nothing yet.</div>';
+}
+
+document.getElementById('send').onclick=async()=>{
+  const email=document.getElementById('email').value.trim();
+  status.textContent='Sending…';
+  const {error}=await sb.auth.signInWithOtp({
+    email,
+    options:{emailRedirectTo:location.origin+'/admin.html'}
+  });
+  status.textContent=error?'Could not send the link.':'Check your email for the sign-in link.';
+};
+document.getElementById('signout').onclick=async()=>{await sb.auth.signOut();location.reload()};
+sb.auth.onAuthStateChange(()=>setTimeout(load,0));
+load();
+</script>
+</body>
+</html>
