@@ -21,13 +21,21 @@ textarea::placeholder{color:#44433f}.meta{display:flex;justify-content:space-bet
 .home{display:none;justify-content:center;align-items:flex-start;padding-top:42vh}.home.open{display:flex}.home h1{font-family:"Lucida Console","Courier New",monospace;font-size:clamp(46px,11vw,90px);letter-spacing:-.055em;margin:0;font-weight:700;font-stretch:condensed}
 .error{min-height:18px;color:#8f7c74;font-size:12px;margin-top:16px}.ui-link{position:fixed;right:14px;bottom:11px;color:#3f3e3a;text-decoration:none;font-size:9px;letter-spacing:.12em}.ui-link:hover{color:#77756e}
 @media(max-width:520px){.screen{padding:24px 18px}.word{margin-bottom:28px}textarea{min-height:260px}}
+
+/* Optional research support */
+.ui-research-support{box-sizing:border-box;position:relative;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 20px;max-width:100%;margin:28px 0 0;padding:16px 0;border-top:1px solid rgba(255,255,255,.16);color:inherit;font-family:inherit;font-size:14px;line-height:1.5;text-transform:none;letter-spacing:normal;text-align:left}
+.ui-research-support a{display:inline-block;width:auto;min-height:24px;margin:0;padding:2px 0;position:static;background:none;border:0;border-bottom:1px solid currentColor;border-radius:0;color:inherit;font-family:inherit;font-size:14px;font-weight:500;line-height:1.5;text-transform:none;letter-spacing:normal;text-decoration:none;white-space:normal}
+.ui-research-support a:hover{opacity:.8}
+.ui-research-support a:focus-visible{outline:2px solid currentColor;outline-offset:5px}
+.ui-research-support span{color:inherit;font-size:14px;line-height:1.5;opacity:.72}
+@media print{.ui-research-support{display:none}}
 </style>
 </head>
 <body>
 <section class="screen invite" id="invite">
   <h1 class="word">NOTHING</h1>
   <p class="line">Add one idea to the flywheel of the universe.</p>
-  <button class="enter" id="enter">Enter</button>
+  <button class="enter" id="enter">Enter</button><aside class="ui-research-support" aria-label="Optional research support"><a href="https://www.paypal.com/ncp/payment/URD6UTHYRKD9N" target="_blank" rel="noopener noreferrer">Support the research</a><span>Optional · $1 · $2 · $5 · $10 · $100</span></aside>
 </section>
 <section class="screen terminal" id="terminal">
   <div>
